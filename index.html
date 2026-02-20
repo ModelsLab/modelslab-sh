@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ModelsLab CLI — AI generation from the terminal</title>
+  <meta name="description" content="The official CLI for the ModelsLab AI platform. Generate images, train models, and manage AI workflows — all from your terminal.">
+  <meta name="theme-color" content="#6366f1">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%94%B7</text></svg>">
+  <style>
+    /* ========== RESET & BASE ========== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #141414;
+      --bg-code: #1e1e2e;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --text: #e5e5e5;
+      --text-muted: #737373;
+      --green: #22c55e;
+      --border: #262626;
+      --radius: 8px;
+      --radius-lg: 12px;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
+      --max-w: 1100px;
+      --nav-h: 64px;
+    }
+
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-hover); }
+
+    code, pre { font-family: var(--font-mono); }
+
+    /* ========== NAV ========== */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo .dot { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-github {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-github:hover { color: var(--text); }
+
+    .nav-github svg { width: 20px; height: 20px; fill: currentColor; }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .mobile-menu-btn svg { width: 24px; height: 24px; }
+
+    /* ========== HERO ========== */
+    .hero {
+      padding: 120px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      background: var(--bg-card);
+    }
+
+    .hero-badge .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-tagline {
+      font-size: clamp(18px, 2.5vw, 22px);
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 48px;
+      line-height: 1.5;
+    }
+
+    .hero-install {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      font-family: var(--font-mono);
+      font-size: 15px;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .hero-install .prompt { color: var(--green); user-select: none; }
+    .hero-install .cmd { color: var(--text); white-space: nowrap; }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .copy-btn:hover { color: var(--text); border-color: var(--text-muted); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green); }
+    .copy-btn svg { width: 16px; height: 16px; }
+
+    .hero-links {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--accent-hover); color: #fff; }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover { border-color: var(--text-muted); color: var(--text); }
+
+    .btn svg { width: 18px; height: 18px; }
+
+    /* ========== SECTIONS ========== */
+    section {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+
+    .section-label {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 36px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    /* ========== INSTALL TABS ========== */
+    .install-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 4px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .install-tab {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .install-tab:hover { color: var(--text); }
+
+    .install-tab.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .install-panel {
+      display: none;
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      position: relative;
+    }
+
+    .install-panel.active { display: block; }
+
+    .install-panel pre {
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .install-panel .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+
+    .install-panel .comment { color: var(--text-muted); }
+    .install-panel .prompt { color: var(--green); user-select: none; }
+
+    .install-note {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .install-note a { font-weight: 500; }
+
+    /* ========== QUICK START ========== */
+    .quickstart-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .quickstart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+
+    .quickstart-card:hover { border-color: var(--accent); }
+
+    .quickstart-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .quickstart-card .step-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .quickstart-card .code-block {
+      background: var(--bg-code);
+      border-radius: 6px;
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .quickstart-card .code-block .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+
+    .quickstart-card .prompt { color: var(--green); user-select: none; }
+    .quickstart-card .flag { color: var(--accent); }
+    .quickstart-card .string { color: #f59e0b; }
+    .quickstart-card .comment { color: var(--text-muted); }
+    .quickstart-card .output { color: var(--text-muted); user-select: none; }
+
+    /* ========== FEATURES ========== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius);
+      background: rgba(99, 102, 241, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ========== COMMANDS ========== */
+    .commands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 12px;
+    }
+
+    .command-group {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .command-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+      background: none;
+      border: none;
+      width: 100%;
+      color: var(--text);
+      font-family: var(--font-sans);
+    }
+
+    .command-group-header:hover { background: rgba(255, 255, 255, 0.02); }
+
+    .command-group-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .command-group-header .count {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .command-group-header .chevron {
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .command-group.open .chevron { transform: rotate(180deg); }
+
+    .command-group-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .command-group.open .command-group-body {
+      max-height: 600px;
+    }
+
+    .command-list {
+      padding: 0 20px 16px;
+      list-style: none;
+    }
+
+    .command-list li {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 6px 0;
+      color: var(--text-muted);
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .command-list .cmd-name { color: var(--text); white-space: nowrap; }
+
+    .command-list .cmd-sep {
+      flex: 1;
+      border-bottom: 1px dotted var(--border);
+      min-width: 16px;
+    }
+
+    .command-list .cmd-desc {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 24px;
+    }
+
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-left {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
+
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--nav-h);
+        left: 0;
+        right: 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 24px;
+        gap: 16px;
+      }
+
+      .hero { padding: 80px 24px 60px; }
+      .hero-install { font-size: 13px; padding: 12px 16px; }
+
+      section { padding: 60px 24px; }
+
+      .features-grid { grid-template-columns: 1fr; }
+      .commands-grid { grid-template-columns: 1fr; }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 32px; }
+      .install-tabs { flex-wrap: nowrap; }
+      .install-tab { padding: 8px 12px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========== NAV ========== -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <span class="dot">&gt;_</span> modelslab<span class="dot">.sh</span>
+    </a>
+
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#install">Install</a></li>
+      <li><a href="#quickstart">Quick Start</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#commands">Commands</a></li>
+      <li>
+        <a href="https://github.com/ModelsLab/modelslab-cli" target="_blank" class="nav-github">
+          <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    Open Source CLI
+  </div>
+
+  <h1><span class="gradient">ModelsLab CLI</span></h1>
+  <p class="hero-tagline">AI generation from the terminal. Images, video, audio, 3D, and more &mdash; powered by 105+ commands.</p>
+
+  <div class="hero-install">
+    <span class="prompt">$</span>
+    <span class="cmd">curl -fsSL https://modelslab.sh/install.sh | sh</span>
+    <button class="copy-btn" onclick="copyText('curl -fsSL https://modelslab.sh/install.sh | sh', this)" aria-label="Copy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+    </button>
+  </div>
+
+  <div class="hero-links">
+    <a href="#install" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Install
+    </a>
+    <a href="https://github.com/ModelsLab/modelslab-cli" target="_blank" class="btn btn-secondary">
+      <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      GitHub
+    </a>
+  </div>
+</section>
+
+<!-- ========== INSTALL ========== -->
+<section id="install">
+  <p class="section-label">Installation</p>
+  <h2 class="section-title">Get started in seconds</h2>
+  <p class="section-desc">Install with your preferred package manager or download a prebuilt binary.</p>
+
+  <div class="install-tabs" role="tablist">
+    <button class="install-tab active" onclick="switchTab('macos')" role="tab">macOS</button>
+    <button class="install-tab" onclick="switchTab('linux')" role="tab">Linux</button>
+    <button class="install-tab" onclick="switchTab('windows')" role="tab">Windows</button>
+    <button class="install-tab" onclick="switchTab('direct')" role="tab">Direct Download</button>
+    <button class="install-tab" onclick="switchTab('go')" role="tab">Go Install</button>
+  </div>
+
+  <div class="install-panel active" id="panel-macos">
+    <button class="copy-btn" onclick="copyText('brew install modelslab/tap/modelslab', this)" aria-label="Copy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+    </button>
+    <pre><span class="comment"># Install via Homebrew</span>
+<span class="prompt">$ </span>brew install modelslab/tap/modelslab</pre>
+  </div>
+
+  <div class="install-panel" id="panel-linux">
+    <button class="copy-btn" onclick="copyText('curl -fsSL https://github.com/ModelsLab/modelslab-cli/releases/latest/download/modelslab_linux_amd64.deb -o modelslab.deb && sudo dpkg -i modelslab.deb', this)" aria-label="Copy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+    </button>
+    <pre><span class="comment"># Install via .deb package</span>
+<span class="prompt">$ </span>curl -fsSL https://github.com/ModelsLab/modelslab-cli/releases/latest/download/modelslab_linux_amd64.deb \
+    -o modelslab.deb && sudo dpkg -i modelslab.deb</pre>
+  </div>
+
+  <div class="install-panel" id="panel-windows">
+    <button class="copy-btn" onclick="copyText('scoop bucket add modelslab https://github.com/ModelsLab/scoop-bucket && scoop install modelslab', this)" aria-label="Copy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+    </button>
+    <pre><span class="comment"># Install via Scoop</span>
+<span class="prompt">&gt; </span>scoop bucket add modelslab https://github.com/ModelsLab/scoop-bucket
+<span class="prompt">&gt; </span>scoop install modelslab</pre>
+  </div>
+
+  <div class="install-panel" id="panel-direct">
+    <button class="copy-btn" onclick="copyText('curl -fsSL https://modelslab.sh/install.sh | sh', this)" aria-label="Copy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+    </button>
+    <pre><span class="comment"># Install via shell script (macOS, Linux)</span>
+<span class="prompt">$ </span>curl -fsSL https://modelslab.sh/install.sh | sh</pre>
+  </div>
+
+  <div class="install-panel" id="panel-go">
+    <button class="copy-btn" onclick="copyText('go install github.com/ModelsLab/modelslab-cli/cmd/modelslab@latest', this)" aria-label="Copy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+    </button>
+    <pre><span class="comment"># Install via Go</span>
+<span class="prompt">$ </span>go install github.com/ModelsLab/modelslab-cli/cmd/modelslab@latest</pre>
+  </div>
+
+  <p class="install-note">
+    See all releases on <a href="https://github.com/ModelsLab/modelslab-cli/releases" target="_blank">GitHub Releases</a>.
+    Prebuilt binaries for macOS (arm64/amd64), Linux, and Windows.
+  </p>
+</section>
+
+<!-- ========== QUICK START ========== -->
+<section id="quickstart">
+  <p class="section-label">Quick Start</p>
+  <h2 class="section-title">Up and running in 3 steps</h2>
+  <p class="section-desc">Authenticate, generate, explore. That's it.</p>
+
+  <div class="quickstart-grid">
+    <div class="quickstart-card">
+      <h3>1. Authenticate</h3>
+      <p class="step-desc">Log in with your ModelsLab API key.</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyText('modelslab auth login', this)" aria-label="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+<span class="prompt">$ </span>modelslab auth login
+<span class="output">Enter API key: ********
+Authenticated successfully.</span>
+      </div>
+    </div>
+
+    <div class="quickstart-card">
+      <h3>2. Generate an image</h3>
+      <p class="step-desc">Create AI-generated images from text prompts.</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyText('modelslab image generate --prompt &quot;a futuristic cityscape at sunset&quot;', this)" aria-label="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+<span class="prompt">$ </span>modelslab image generate <span class="flag">--prompt</span> <span class="string">"a futuristic cityscape at sunset"</span>
+<span class="output">Generating image...
+Saved to ./output_001.png</span>
+      </div>
+    </div>
+
+    <div class="quickstart-card">
+      <h3>3. Explore models</h3>
+      <p class="step-desc">Search and discover available AI models.</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyText('modelslab models search --query &quot;stable diffusion&quot;', this)" aria-label="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+<span class="prompt">$ </span>modelslab models search <span class="flag">--query</span> <span class="string">"stable diffusion"</span>
+<span class="output">Found 24 models matching "stable diffusion"
+  sdxl         Stable Diffusion XL         text2img
+  sd-3.5       Stable Diffusion 3.5        text2img
+  ...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FEATURES ========== -->
+<section id="features">
+  <p class="section-label">Features</p>
+  <h2 class="section-title">Built for developers</h2>
+  <p class="section-desc">A comprehensive CLI designed to integrate seamlessly into your workflow.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <h3>105+ Commands</h3>
+      <p>Full coverage of the ModelsLab API. Image, video, audio, 3D, training, upscaling, and more.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m-7-3.5l5.2-3m3.6-2.1L19 1.5M5 1.5l5.2 3m3.6 2.1L19 9.5"/></svg>
+      </div>
+      <h3>Agent-first Design</h3>
+      <p>Structured JSON output, non-interactive mode, and machine-readable errors for AI agents and automation.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <h3>MCP Server</h3>
+      <p>Built-in Model Context Protocol server. Connect directly to Claude, Cursor, or any MCP-compatible AI tool.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      </div>
+      <h3>Cross-platform</h3>
+      <p>Native binaries for macOS, Linux, and Windows. Install via Homebrew, Scoop, apt, or direct download.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+      </div>
+      <h3>Pipeline-friendly</h3>
+      <p>Pipe outputs between commands, integrate with shell scripts, and build complex AI generation pipelines.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>Secure by default</h3>
+      <p>API keys stored in your OS keychain. No credentials in plaintext config files or environment variables.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== COMMANDS ========== -->
+<section id="commands">
+  <p class="section-label">Commands</p>
+  <h2 class="section-title">Full command reference</h2>
+  <p class="section-desc">Organized by domain. Click to expand each group.</p>
+
+  <div class="commands-grid">
+    <div class="command-group">
+      <button class="command-group-header" onclick="toggleGroup(this)">
+        <h3>Image Generation <span class="count">12 commands</span></h3>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="command-group-body">
+        <ul class="command-list">
+          <li><span class="cmd-name">image generate</span><span class="cmd-sep"></span><span class="cmd-desc">Text to image</span></li>
+          <li><span class="cmd-name">image img2img</span><span class="cmd-sep"></span><span class="cmd-desc">Image to image</span></li>
+          <li><span class="cmd-name">image inpaint</span><span class="cmd-sep"></span><span class="cmd-desc">Inpainting</span></li>
+          <li><span class="cmd-name">image upscale</span><span class="cmd-sep"></span><span class="cmd-desc">Upscale image</span></li>
+          <li><span class="cmd-name">image controlnet</span><span class="cmd-sep"></span><span class="cmd-desc">ControlNet generation</span></li>
+          <li><span class="cmd-name">image fetch</span><span class="cmd-sep"></span><span class="cmd-desc">Fetch queued result</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="command-group">
+      <button class="command-group-header" onclick="toggleGroup(this)">
+        <h3>Video Generation <span class="count">8 commands</span></h3>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="command-group-body">
+        <ul class="command-list">
+          <li><span class="cmd-name">video generate</span><span class="cmd-sep"></span><span class="cmd-desc">Text to video</span></li>
+          <li><span class="cmd-name">video img2video</span><span class="cmd-sep"></span><span class="cmd-desc">Image to video</span></li>
+          <li><span class="cmd-name">video fetch</span><span class="cmd-sep"></span><span class="cmd-desc">Fetch queued result</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="command-group">
+      <button class="command-group-header" onclick="toggleGroup(this)">
+        <h3>Audio &amp; Voice <span class="count">10 commands</span></h3>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="command-group-body">
+        <ul class="command-list">
+          <li><span class="cmd-name">audio generate</span><span class="cmd-sep"></span><span class="cmd-desc">Text to audio</span></li>
+          <li><span class="cmd-name">voice generate</span><span class="cmd-sep"></span><span class="cmd-desc">Text to speech</span></li>
+          <li><span class="cmd-name">voice clone</span><span class="cmd-sep"></span><span class="cmd-desc">Clone a voice</span></li>
+          <li><span class="cmd-name">audio fetch</span><span class="cmd-sep"></span><span class="cmd-desc">Fetch queued result</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="command-group">
+      <button class="command-group-header" onclick="toggleGroup(this)">
+        <h3>3D Generation <span class="count">6 commands</span></h3>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="command-group-body">
+        <ul class="command-list">
+          <li><span class="cmd-name">threed generate</span><span class="cmd-sep"></span><span class="cmd-desc">Text to 3D</span></li>
+          <li><span class="cmd-name">threed img-to-3d</span><span class="cmd-sep"></span><span class="cmd-desc">Image to 3D</span></li>
+          <li><span class="cmd-name">threed fetch</span><span class="cmd-sep"></span><span class="cmd-desc">Fetch queued result</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="command-group">
+      <button class="command-group-header" onclick="toggleGroup(this)">
+        <h3>Model Training <span class="count">8 commands</span></h3>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="command-group-body">
+        <ul class="command-list">
+          <li><span class="cmd-name">training create</span><span class="cmd-sep"></span><span class="cmd-desc">Create fine-tune job</span></li>
+          <li><span class="cmd-name">training status</span><span class="cmd-sep"></span><span class="cmd-desc">Check training status</span></li>
+          <li><span class="cmd-name">training list</span><span class="cmd-sep"></span><span class="cmd-desc">List training jobs</span></li>
+          <li><span class="cmd-name">training cancel</span><span class="cmd-sep"></span><span class="cmd-desc">Cancel a training job</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="command-group">
+      <button class="command-group-header" onclick="toggleGroup(this)">
+        <h3>Models &amp; Chat <span class="count">10 commands</span></h3>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="command-group-body">
+        <ul class="command-list">
+          <li><span class="cmd-name">models search</span><span class="cmd-sep"></span><span class="cmd-desc">Search available models</span></li>
+          <li><span class="cmd-name">models list</span><span class="cmd-sep"></span><span class="cmd-desc">List all models</span></li>
+          <li><span class="cmd-name">chat completions</span><span class="cmd-sep"></span><span class="cmd-desc">LLM chat completions</span></li>
+          <li><span class="cmd-name">chat models</span><span class="cmd-sep"></span><span class="cmd-desc">List chat models</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="command-group">
+      <button class="command-group-header" onclick="toggleGroup(this)">
+        <h3>Enterprise &amp; Realtime <span class="count">8 commands</span></h3>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="command-group-body">
+        <ul class="command-list">
+          <li><span class="cmd-name">enterprise generate</span><span class="cmd-sep"></span><span class="cmd-desc">Enterprise image gen</span></li>
+          <li><span class="cmd-name">realtime generate</span><span class="cmd-sep"></span><span class="cmd-desc">Realtime image gen</span></li>
+          <li><span class="cmd-name">realtime img2img</span><span class="cmd-sep"></span><span class="cmd-desc">Realtime img2img</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="command-group">
+      <button class="command-group-header" onclick="toggleGroup(this)">
+        <h3>Config &amp; Auth <span class="count">6 commands</span></h3>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="command-group-body">
+        <ul class="command-list">
+          <li><span class="cmd-name">auth login</span><span class="cmd-sep"></span><span class="cmd-desc">Authenticate with API key</span></li>
+          <li><span class="cmd-name">auth logout</span><span class="cmd-sep"></span><span class="cmd-desc">Remove stored credentials</span></li>
+          <li><span class="cmd-name">auth status</span><span class="cmd-sep"></span><span class="cmd-desc">Check auth status</span></li>
+          <li><span class="cmd-name">config set</span><span class="cmd-sep"></span><span class="cmd-desc">Set config options</span></li>
+          <li><span class="cmd-name">config get</span><span class="cmd-sep"></span><span class="cmd-desc">Get config values</span></li>
+          <li><span class="cmd-name">mcp serve</span><span class="cmd-sep"></span><span class="cmd-desc">Start MCP server</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <span style="color: var(--accent);">&gt;_</span> modelslab.sh &mdash; built by <a href="https://modelslab.com" target="_blank">ModelsLab</a>
+    </div>
+    <ul class="footer-links">
+      <li><a href="https://github.com/ModelsLab/modelslab-cli" target="_blank">GitHub</a></li>
+      <li><a href="https://github.com/ModelsLab/modelslab-cli/releases" target="_blank">Releases</a></li>
+      <li><a href="https://docs.modelslab.com" target="_blank">Docs</a></li>
+      <li><a href="https://modelslab.com" target="_blank">modelslab.com</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  // ========== Copy to clipboard ==========
+  function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(function() {
+      btn.classList.add('copied');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+      setTimeout(function() {
+        btn.classList.remove('copied');
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+      }, 2000);
+    });
+  }
+
+  // ========== Install tabs ==========
+  function switchTab(id) {
+    document.querySelectorAll('.install-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.install-panel').forEach(function(p) { p.classList.remove('active'); });
+
+    // Find the tab button by matching text content
+    var tabs = document.querySelectorAll('.install-tab');
+    var tabMap = { macos: 0, linux: 1, windows: 2, direct: 3, go: 4 };
+    if (tabMap[id] !== undefined) tabs[tabMap[id]].classList.add('active');
+
+    var panel = document.getElementById('panel-' + id);
+    if (panel) panel.classList.add('active');
+  }
+
+  // ========== Command groups ==========
+  function toggleGroup(header) {
+    var group = header.parentElement;
+    group.classList.toggle('open');
+  }
+
+  // ========== Mobile menu ==========
+  function toggleMobileMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  // Close mobile menu on link click
+  document.querySelectorAll('.nav-links a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.getElementById('navLinks').classList.remove('open');
+    });
+  });
+
+  // ========== Active nav on scroll ==========
+  var sections = document.querySelectorAll('section[id]');
+  var navLinksAll = document.querySelectorAll('.nav-links a[href^="#"]');
+
+  window.addEventListener('scroll', function() {
+    var scrollY = window.scrollY + 100;
+    sections.forEach(function(section) {
+      var top = section.offsetTop;
+      var height = section.offsetHeight;
+      var id = section.getAttribute('id');
+      if (scrollY >= top && scrollY < top + height) {
+        navLinksAll.forEach(function(link) {
+          link.style.color = '';
+          if (link.getAttribute('href') === '#' + id) {
+            link.style.color = 'var(--text)';
+          }
+        });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,429 @@
+# ModelsLab CLI
+
+> The official CLI for the ModelsLab AI platform. Generate images, train models, and manage AI workflows — all from your terminal.
+
+Agent-first AI platform access. Sign up users, manage accounts, generate content, handle billing — 105+ commands, all programmatic, all non-interactive.
+
+## Installation
+
+Install with your preferred package manager or download a prebuilt binary.
+
+### macOS
+
+```bash
+# Install via Homebrew
+$ brew install modelslab/tap/modelslab
+```
+
+### Linux
+
+```bash
+# Install via .deb package
+$ curl -fsSL https://github.com/ModelsLab/modelslab-cli/releases/latest/download/modelslab_linux_amd64.deb \
+    -o modelslab.deb && sudo dpkg -i modelslab.deb
+```
+
+### Windows
+
+```powershell
+# Install via Scoop
+> scoop bucket add modelslab https://github.com/ModelsLab/scoop-bucket
+> scoop install modelslab
+```
+
+### Direct Download (macOS, Linux)
+
+```bash
+$ curl -fsSL https://modelslab.sh/install.sh | sh
+```
+
+### Go Install
+
+```bash
+$ go install github.com/ModelsLab/modelslab-cli/cmd/modelslab@latest
+```
+
+See all releases on GitHub Releases: https://github.com/ModelsLab/modelslab-cli/releases
+Prebuilt binaries for macOS (arm64/amd64), Linux, and Windows.
+
+## Quick Start
+
+### 1. Authenticate
+
+Log in with your ModelsLab API key.
+
+```bash
+$ modelslab auth login
+Enter API key: ********
+Authenticated successfully.
+```
+
+### 2. Generate an image
+
+Create AI-generated images from text prompts.
+
+```bash
+$ modelslab image generate --prompt "a futuristic cityscape at sunset"
+Generating image...
+Saved to ./output_001.png
+```
+
+### 3. Explore models
+
+Search and discover available AI models.
+
+```bash
+$ modelslab models search --query "stable diffusion"
+Found 24 models matching "stable diffusion"
+  sdxl         Stable Diffusion XL         text2img
+  sd-3.5       Stable Diffusion 3.5        text2img
+  ...
+```
+
+## Agent Guide — Complete auth flow for AI agents
+
+Every command accepts flags for non-interactive execution. Agents can create accounts, verify emails, log in, and manage tokens without any human interaction.
+
+### Step 1: Create an account
+
+Register a new user. All fields are passed as flags for non-interactive execution. The password is sent as both password and password_confirmation automatically.
+
+```bash
+$ modelslab auth signup --name "John Doe" \
+    --email "john@example.com" \
+    --password "securePassword123" \
+    --output json
+```
+
+On success, the user receives a verification email. The response includes account details as JSON when `--output json` is used.
+
+### Step 2: Verify email address
+
+After signup, the user receives a verification email containing a token. Use it to verify the account. If the email is lost, resend it.
+
+```bash
+# Verify with the token from the email
+$ modelslab auth verify-email --token "abc123-verification-token"
+
+# If the user didn't receive the email, resend it
+$ modelslab auth resend-verification --email "john@example.com"
+```
+
+### Step 3: Log in
+
+Authenticate with email and password. Returns a bearer token and an API key. Both are automatically stored in the OS keychain (macOS Keychain, Windows Credential Manager, or Linux Secret Service).
+
+```bash
+$ modelslab auth login --email "john@example.com" \
+    --password "securePassword123" \
+    --expiry "1_month" \
+    --device-name "agent-server-01" \
+    --output json
+```
+
+The `--expiry` flag accepts: `1_week`, `1_month`, `3_months`, `6_months`, `1_year`, `never`. Default: `1_month`. The bearer token is used for control-plane API calls; the API key is used for generation endpoints. Both are auto-stored per profile.
+
+### Step 4: Check auth status
+
+Verify that credentials are stored and valid. Returns profile name, email, masked token, and whether an API key is present.
+
+```bash
+$ modelslab auth status --output json
+{"profile":"default","email":"john@example.com","authenticated":true,"has_api_key":true}
+```
+
+### Step 5: Manage tokens
+
+List active sessions, revoke specific tokens, or revoke all other sessions.
+
+```bash
+# List all active tokens/sessions
+$ modelslab auth tokens --output json
+
+# Revoke a specific token by ID
+$ modelslab auth revoke-token --id "42"
+
+# Revoke all tokens except the current session
+$ modelslab auth revoke-others
+
+# Revoke all tokens and log out everywhere
+$ modelslab auth logout-all
+```
+
+### Step 6: Password recovery
+
+Trigger a password reset email, then reset with the token received. All flags are non-interactive.
+
+```bash
+# Step 1: Send reset email
+$ modelslab auth forgot-password --email "john@example.com"
+
+# Step 2: Reset with the token from the email
+$ modelslab auth reset-password \
+    --email "john@example.com" \
+    --token "reset-token-from-email" \
+    --password "newSecurePassword456"
+```
+
+### Step 7: Multi-account and team context
+
+Use profiles to manage multiple accounts. Switch to team member context for team operations. Logout clears local credentials and revokes the server-side token.
+
+```bash
+# Use a named profile for a second account
+$ modelslab auth login --profile "work" --email "work@corp.com" --password "..."
+
+# Switch to a team member context
+$ modelslab auth switch-account --member-id "member-uuid"
+
+# Switch back to personal account
+$ modelslab auth switch-account
+
+# Logout (clears local keychain + revokes server token)
+$ modelslab auth logout
+```
+
+## Complete API Coverage
+
+14 command groups, 105+ commands. Every endpoint in the ModelsLab platform is accessible from the CLI.
+
+### auth (12 commands)
+signup, login, logout, logout-all, status, verify-email, resend-verification, forgot-password, reset-password, tokens, revoke-token, revoke-others, switch-account
+
+### profile (5 commands)
+get, update, update-password, update-socials, update-preferences
+
+### keys (5 commands)
+list, create, get, update, delete
+
+### models (5 commands)
+search, detail, filters, tags, providers
+
+### generate (20 commands)
+image, image-to-image, inpaint, video, image-to-video, video-to-video, lip-sync, motion-control, tts, stt, voice-to-voice, music, sfx, dubbing, song-extend, song-inpaint, text-to-3d, image-to-3d, chat, fetch
+
+### billing (13 commands)
+overview, payment-methods, add-payment-method, set-default, remove, info, update-info, invoices, invoice, invoice-pdf, stripe-config, payment-link, setup-intent
+
+### wallet (10 commands)
+balance, fund, confirm-checkout, transactions, auto-funding, disable-auto-funding, withdraw, validate-coupon, redeem-coupon, payment-status
+
+### subscriptions (10 commands)
+plans, list, create, confirm-checkout, status, update, pause, resume, reset-cycle, charge-amount
+
+### teams (7 commands)
+list, invite, get, update, remove, resend-invite, accept-invite
+
+### usage (3 commands)
+summary, products, history
+
+### config (6 commands)
+set, get, list, profiles list, profiles use, profiles delete
+
+### mcp (2 commands)
+serve, tools
+
+### docs (2 commands)
+openapi, changelog
+
+### completion (4 shells)
+bash, zsh, fish, powershell
+
+## Agent Integration — Three ways to connect
+
+Use the CLI directly, as an MCP server, or compose commands in shell scripts.
+
+### Direct CLI execution
+
+Run any command with `--output json` for machine-readable output and `--jq` to extract specific fields. Every command supports both flags.
+
+```bash
+# Get wallet balance as a number
+$ modelslab wallet balance --output json --jq '.data.wallet.balance'
+142.50
+
+# Generate image and extract output URL
+$ modelslab generate image --prompt "a logo" \
+    --output json --jq '.output[0]'
+https://cdn.modelslab.com/gen/abc123.png
+
+# List models filtered by feature
+$ modelslab models search --feature "video" \
+    --output json --jq '.data[].model_id'
+```
+
+### MCP server mode
+
+Start a Model Context Protocol server that exposes all CLI tools to AI assistants. Works with Claude Code, Claude Desktop, Cursor, and any MCP-compatible client.
+
+```bash
+# Start MCP server (stdio transport)
+$ modelslab mcp serve --transport "stdio"
+
+# Start MCP server (SSE transport on port 8080)
+$ modelslab mcp serve --transport "sse" --addr ":8080"
+
+# List all available MCP tools
+$ modelslab mcp tools --output json
+```
+
+### Shell scripting
+
+Pipe commands together, use exit codes for flow control, and build automated workflows. All commands exit with structured codes for error handling.
+
+```bash
+# Full automated workflow: signup, fund, generate
+$ modelslab auth signup --name "Bot" \
+    --email "bot@co.com" --password "..." && \
+  modelslab auth login --email "bot@co.com" \
+    --password "..." && \
+  modelslab generate image --prompt "hello world"
+
+# Check exit code for error handling
+$ modelslab auth login --email "x" --password "y"; \
+  echo "exit: $?"
+exit: 3  # 3 = auth error
+```
+
+## Output & Automation
+
+Structured output, JQ filtering, typed exit codes, and environment variable overrides. Everything an agent needs for reliable automation.
+
+### JSON output and JQ filtering
+
+Every command supports `--output json` (or `-o json`) for structured output, and `--jq` for inline filtering without piping to external tools.
+
+```bash
+# Full JSON response
+$ modelslab profile get -o json
+
+# Extract just the email
+$ modelslab profile get -o json --jq '.data.email'
+
+# Get API key IDs as a list
+$ modelslab keys list -o json --jq '.data[].id'
+
+# Check subscription status
+$ modelslab subscriptions status --id "sub_123" \
+    -o json --jq '.data.status'
+```
+
+### Exit codes
+
+All commands return typed exit codes. Use these for branching in scripts and agents.
+
+| Code | Constant          | Meaning                                              |
+|------|-------------------|------------------------------------------------------|
+| 0    | ExitSuccess       | Command completed successfully                       |
+| 1    | ExitGeneralError  | General/unexpected error                             |
+| 2    | ExitUsageError    | Invalid flags or arguments                           |
+| 3    | ExitAuthError     | Authentication failed (bad credentials, expired token)|
+| 4    | ExitRateLimited   | API rate limit exceeded                              |
+| 5    | ExitNotFound      | Resource not found                                   |
+| 6    | ExitPaymentError  | Payment or billing error                             |
+| 7    | ExitGenTimeout    | Generation timed out (still processing)              |
+| 10   | ExitNetworkError  | Network connectivity error                           |
+
+### Environment variables
+
+Override any configuration via environment variables. These take precedence over config files but are overridden by CLI flags.
+
+| Variable             | Description                                              |
+|----------------------|----------------------------------------------------------|
+| MODELSLAB_API_KEY    | API key for generation endpoints (overrides keychain)    |
+| MODELSLAB_TOKEN      | Bearer token for control-plane API (overrides keychain)  |
+| MODELSLAB_BASE_URL   | Override API base URL (for self-hosted or staging)       |
+| NO_COLOR             | Disable colored terminal output (set to any value)       |
+
+### Global flags
+
+These flags are available on every command and control behavior across the entire CLI.
+
+```
+--output, -o "json"       # Output format: human (default), json
+--jq "<expression>"       # Filter JSON output with jq expression
+--profile "<name>"        # Auth profile to use (default: "default")
+--api-key "<key>"         # Override API key for this command
+--base-url "<url>"        # Override API base URL
+--no-color                # Disable colored output
+```
+
+## Features
+
+### 105+ Commands
+Full coverage of the ModelsLab API. Image, video, audio, 3D, training, upscaling, and more.
+
+### Agent-first Design
+Structured JSON output, non-interactive mode, and machine-readable errors for AI agents and automation.
+
+### MCP Server
+Built-in Model Context Protocol server. Connect directly to Claude, Cursor, or any MCP-compatible AI tool.
+
+### Cross-platform
+Native binaries for macOS, Linux, and Windows. Install via Homebrew, Scoop, apt, or direct download.
+
+### Pipeline-friendly
+Pipe outputs between commands, integrate with shell scripts, and build complex AI generation pipelines.
+
+### Secure by default
+API keys stored in your OS keychain. No credentials in plaintext config files or environment variables.
+
+## Full Command Reference
+
+### Image Generation (12 commands)
+- image generate — Text to image
+- image img2img — Image to image
+- image inpaint — Inpainting
+- image upscale — Upscale image
+- image controlnet — ControlNet generation
+- image fetch — Fetch queued result
+
+### Video Generation (8 commands)
+- video generate — Text to video
+- video img2video — Image to video
+- video fetch — Fetch queued result
+
+### Audio & Voice (10 commands)
+- audio generate — Text to audio
+- voice generate — Text to speech
+- voice clone — Clone a voice
+- audio fetch — Fetch queued result
+
+### 3D Generation (6 commands)
+- threed generate — Text to 3D
+- threed img-to-3d — Image to 3D
+- threed fetch — Fetch queued result
+
+### Model Training (8 commands)
+- training create — Create fine-tune job
+- training status — Check training status
+- training list — List training jobs
+- training cancel — Cancel a training job
+
+### Models & Chat (10 commands)
+- models search — Search available models
+- models list — List all models
+- chat completions — LLM chat completions
+- chat models — List chat models
+
+### Enterprise & Realtime (8 commands)
+- enterprise generate — Enterprise image gen
+- realtime generate — Realtime image gen
+- realtime img2img — Realtime img2img
+
+### Config & Auth (6 commands)
+- auth login — Authenticate with API key
+- auth logout — Remove stored credentials
+- auth status — Check auth status
+- config set — Set config options
+- config get — Get config values
+- mcp serve — Start MCP server
+
+## Links
+
+- GitHub: https://github.com/ModelsLab/modelslab-cli
+- Releases: https://github.com/ModelsLab/modelslab-cli/releases
+- Skills: https://github.com/ModelsLab/skills
+- MacPilot: https://github.com/adhikjoshi/macpilot
+- Docs: https://docs.modelslab.com
+- Website: https://modelslab.com

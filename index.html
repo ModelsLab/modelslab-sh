@@ -14,7 +14,8 @@
     :root {
       --bg: #0a0a0a;
       --bg-card: #141414;
-      --bg-code: #1e1e2e;
+      --bg-code: #1a1a2e;
+      --bg-code-header: #151525;
       --accent: #6366f1;
       --accent-hover: #818cf8;
       --text: #e5e5e5;
@@ -22,6 +23,7 @@
       --green: #22c55e;
       --amber: #f59e0b;
       --border: #262626;
+      --border-code: #2a2a3e;
       --radius: 8px;
       --radius-lg: 12px;
       --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -52,14 +54,14 @@
       top: 0;
       z-index: 100;
       height: var(--nav-h);
-      background: rgba(10, 10, 10, 0.8);
+      background: rgba(10, 10, 10, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
 
     .nav-inner {
-      max-width: var(--max-w);
+      max-width: 1280px;
       margin: 0 auto;
       padding: 0 24px;
       height: 100%;
@@ -81,15 +83,17 @@
 
     .nav-links {
       display: flex;
-      gap: 32px;
+      gap: 20px;
       list-style: none;
+      align-items: center;
     }
 
     .nav-links a {
       color: var(--text-muted);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       transition: color 0.2s;
+      white-space: nowrap;
     }
 
     .nav-links a:hover { color: var(--text); }
@@ -105,7 +109,6 @@
     }
 
     .nav-github:hover { color: var(--text); }
-
     .nav-github svg { width: 20px; height: 20px; fill: currentColor; }
 
     .nav-sep {
@@ -147,6 +150,17 @@
 
     .mobile-menu-btn svg { width: 24px; height: 24px; }
 
+    /* Mobile nav overlay */
+    .nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 99;
+    }
+
+    .nav-overlay.open { display: block; }
+
     /* ========== HERO ========== */
     .hero {
       padding: 120px 24px 80px;
@@ -185,12 +199,6 @@
       height: 6px;
       border-radius: 50%;
       background: var(--green);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
     }
 
     .hero h1 {
@@ -221,7 +229,7 @@
       align-items: center;
       gap: 12px;
       background: var(--bg-code);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-code);
       border-radius: var(--radius);
       padding: 14px 20px;
       font-family: var(--font-mono);
@@ -232,24 +240,6 @@
 
     .hero-install .prompt { color: var(--green); user-select: none; }
     .hero-install .cmd { color: var(--text); white-space: nowrap; }
-
-    .copy-btn {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-
-    .copy-btn:hover { color: var(--text); border-color: var(--text-muted); }
-    .copy-btn.copied { color: var(--green); border-color: var(--green); }
-    .copy-btn svg { width: 16px; height: 16px; }
 
     .hero-links {
       display: flex;
@@ -289,6 +279,29 @@
 
     .btn svg { width: 18px; height: 18px; }
 
+    /* ========== COPY BUTTON ========== */
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .copy-btn:hover { color: var(--text); border-color: var(--text-muted); background: rgba(255,255,255,0.04); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green); }
+    .copy-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
     /* ========== SECTIONS ========== */
     section {
       max-width: var(--max-w);
@@ -318,6 +331,57 @@
       max-width: 600px;
       margin-bottom: 40px;
     }
+
+    /* ========== CODE BLOCKS (unified) ========== */
+    .code-block {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border-code);
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      background: var(--bg-code-header);
+      border-bottom: 1px solid var(--border-code);
+    }
+
+    .code-lang {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      user-select: none;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .code-header .copy-btn {
+      border: none;
+      padding: 4px 8px;
+    }
+
+    .code-body {
+      background: var(--bg-code);
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+    }
+
+    pre.code-body { margin: 0; }
+
+    /* Syntax tokens */
+    .prompt { color: var(--green); user-select: none; }
+    .flag { color: var(--accent); }
+    .string { color: #f59e0b; }
+    .comment { color: var(--text-muted); }
+    .output { color: var(--text-muted); user-select: none; }
 
     /* ========== INSTALL TABS ========== */
     .install-tabs {
@@ -354,31 +418,9 @@
 
     .install-panel {
       display: none;
-      background: var(--bg-code);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      position: relative;
     }
 
     .install-panel.active { display: block; }
-
-    .install-panel pre {
-      font-size: 14px;
-      line-height: 1.7;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    .install-panel .copy-btn {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-    }
-
-    .install-panel .comment { color: var(--text-muted); }
-    .install-panel .prompt { color: var(--green); user-select: none; }
 
     .install-note {
       margin-top: 12px;
@@ -415,29 +457,6 @@
       color: var(--text-muted);
       margin-bottom: 12px;
     }
-
-    .quickstart-card .code-block {
-      background: var(--bg-code);
-      border-radius: 6px;
-      padding: 14px 16px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      line-height: 1.7;
-      overflow-x: auto;
-      position: relative;
-    }
-
-    .quickstart-card .code-block .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-    }
-
-    .quickstart-card .prompt { color: var(--green); user-select: none; }
-    .quickstart-card .flag { color: var(--accent); }
-    .quickstart-card .string { color: #f59e0b; }
-    .quickstart-card .comment { color: var(--text-muted); }
-    .quickstart-card .output { color: var(--text-muted); user-select: none; }
 
     /* ========== AGENT GUIDE ========== */
     .agent-flow {
@@ -488,31 +507,6 @@
       line-height: 1.5;
     }
 
-    .agent-step .code-block {
-      background: var(--bg-code);
-      border-radius: 6px;
-      padding: 14px 16px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      line-height: 1.7;
-      overflow-x: auto;
-      position: relative;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .agent-step .code-block .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-    }
-
-    .agent-step .prompt { color: var(--green); user-select: none; }
-    .agent-step .flag { color: var(--accent); }
-    .agent-step .string { color: #f59e0b; }
-    .agent-step .comment { color: var(--text-muted); }
-    .agent-step .output { color: var(--text-muted); user-select: none; }
-
     .agent-note {
       margin-top: 10px;
       font-size: 13px;
@@ -539,6 +533,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 20px;
+      transition: border-color 0.2s;
     }
 
     .api-group:hover { border-color: var(--accent); }
@@ -584,7 +579,7 @@
     /* ========== AGENT INTEGRATION ========== */
     .integration-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: 1fr;
       gap: 16px;
     }
 
@@ -611,30 +606,10 @@
       line-height: 1.5;
     }
 
-    .integration-card .code-block {
-      background: var(--bg-code);
-      border-radius: 6px;
-      padding: 14px 16px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      line-height: 1.7;
-      overflow-x: auto;
-      position: relative;
-      white-space: pre-wrap;
-      word-break: break-word;
+    .integration-card .code-body {
+      white-space: pre;
+      word-break: normal;
     }
-
-    .integration-card .code-block .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-    }
-
-    .integration-card .prompt { color: var(--green); user-select: none; }
-    .integration-card .flag { color: var(--accent); }
-    .integration-card .string { color: #f59e0b; }
-    .integration-card .comment { color: var(--text-muted); }
-    .integration-card .output { color: var(--text-muted); user-select: none; }
 
     /* ========== OUTPUT & AUTOMATION ========== */
     .automation-grid {
@@ -665,50 +640,37 @@
       line-height: 1.5;
     }
 
-    .automation-card .code-block {
-      background: var(--bg-code);
-      border-radius: 6px;
-      padding: 14px 16px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      line-height: 1.7;
+    /* Tables */
+    .table-wrap {
       overflow-x: auto;
-      position: relative;
-      white-space: pre-wrap;
-      word-break: break-word;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
     }
 
-    .automation-card .code-block .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-    }
-
-    .automation-card .prompt { color: var(--green); user-select: none; }
-    .automation-card .flag { color: var(--accent); }
-    .automation-card .string { color: #f59e0b; }
-    .automation-card .comment { color: var(--text-muted); }
-    .automation-card .output { color: var(--text-muted); user-select: none; }
-
-    .exit-code-table {
+    .exit-code-table,
+    .env-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
     }
 
-    .exit-code-table th {
+    .exit-code-table th,
+    .env-table th {
       text-align: left;
-      padding: 8px 12px;
+      padding: 10px 14px;
       border-bottom: 1px solid var(--border);
       color: var(--text-muted);
       font-weight: 600;
-      font-size: 12px;
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      background: var(--bg-card);
     }
 
-    .exit-code-table td {
-      padding: 6px 12px;
+    .exit-code-table td,
+    .env-table td {
+      padding: 8px 14px;
       border-bottom: 1px solid rgba(38, 38, 38, 0.5);
     }
 
@@ -725,30 +687,9 @@
       white-space: nowrap;
     }
 
-    .exit-code-table td:last-child {
+    .exit-code-table td:last-child,
+    .env-table td:last-child {
       color: var(--text-muted);
-    }
-
-    .env-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-
-    .env-table th {
-      text-align: left;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--border);
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .env-table td {
-      padding: 6px 12px;
-      border-bottom: 1px solid rgba(38, 38, 38, 0.5);
     }
 
     .env-table td:first-child {
@@ -756,10 +697,6 @@
       color: var(--green);
       font-weight: 500;
       white-space: nowrap;
-    }
-
-    .env-table td:last-child {
-      color: var(--text-muted);
     }
 
     /* ========== FEATURES ========== */
@@ -774,12 +711,11 @@
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 28px 24px;
-      transition: border-color 0.2s, transform 0.2s;
+      transition: border-color 0.2s;
     }
 
     .feature-card:hover {
       border-color: var(--accent);
-      transform: translateY(-2px);
     }
 
     .feature-icon {
@@ -935,52 +871,106 @@
 
     .footer-links a:hover { color: var(--text); }
 
+    /* ========== BACK TO TOP ========== */
+    .back-to-top {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .back-to-top:hover { border-color: var(--accent); color: var(--accent); }
+    .back-to-top.visible { display: flex; }
+    .back-to-top svg { width: 18px; height: 18px; }
+
     /* ========== RESPONSIVE ========== */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
+      .nav-links { gap: 16px; }
+    }
+
+    @media (max-width: 900px) {
       .nav-links { display: none; }
       .mobile-menu-btn { display: block; }
 
       .nav-links.open {
         display: flex;
         flex-direction: column;
-        position: absolute;
+        position: fixed;
         top: var(--nav-h);
         left: 0;
         right: 0;
+        bottom: 0;
         background: var(--bg);
-        border-bottom: 1px solid var(--border);
-        padding: 16px 24px;
-        gap: 16px;
+        border-top: 1px solid var(--border);
+        padding: 24px;
+        gap: 20px;
+        z-index: 100;
+        overflow-y: auto;
       }
+
+      .nav-links.open a { font-size: 16px; }
 
       .nav-sep { display: none; }
 
       .hero { padding: 80px 24px 60px; }
       .hero-install { font-size: 13px; padding: 12px 16px; }
 
-      section { padding: 60px 24px; }
+      section { padding: 60px 20px; }
 
       .features-grid { grid-template-columns: 1fr; }
       .commands-grid { grid-template-columns: 1fr; }
       .api-coverage-grid { grid-template-columns: 1fr; }
-      .integration-grid { grid-template-columns: 1fr; }
 
       .footer-inner {
         flex-direction: column;
         text-align: center;
       }
+
+      .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+
+      .back-to-top { bottom: 20px; right: 20px; }
     }
 
     @media (max-width: 480px) {
       .hero h1 { font-size: 32px; }
+      .hero-tagline { font-size: 16px; }
       .install-tabs { flex-wrap: nowrap; }
       .install-tab { padding: 8px 12px; font-size: 12px; }
+
+      .section-desc { font-size: 14px; }
+
+      .quickstart-card,
+      .agent-step,
+      .integration-card,
+      .automation-card { padding: 20px 16px; }
+
+      .code-body { padding: 12px; font-size: 12px; }
+
+      .exit-code-table,
+      .env-table { font-size: 12px; }
+
+      .exit-code-table th,
+      .env-table th,
+      .exit-code-table td,
+      .env-table td { padding: 6px 10px; }
     }
   </style>
 </head>
 <body>
 
 <!-- ========== NAV ========== -->
+<div class="nav-overlay" id="navOverlay" onclick="closeMobileMenu()"></div>
 <nav>
   <div class="nav-inner">
     <a href="#" class="nav-logo">
@@ -1038,6 +1028,7 @@
     <span class="cmd">curl -fsSL https://modelslab.sh/install.sh | sh</span>
     <button class="copy-btn" onclick="copyText('curl -fsSL https://modelslab.sh/install.sh | sh', this)" aria-label="Copy">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      Copy
     </button>
   </div>
 
@@ -1068,45 +1059,75 @@
   </div>
 
   <div class="install-panel active" id="panel-macos">
-    <button class="copy-btn" onclick="copyText('brew install modelslab/tap/modelslab', this)" aria-label="Copy">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-    </button>
-    <pre><span class="comment"># Install via Homebrew</span>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">Terminal</span>
+        <button class="copy-btn" onclick="copyText('brew install modelslab/tap/modelslab', this)" aria-label="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="code-body"><span class="comment"># Install via Homebrew</span>
 <span class="prompt">$ </span>brew install modelslab/tap/modelslab</pre>
+    </div>
   </div>
 
   <div class="install-panel" id="panel-linux">
-    <button class="copy-btn" onclick="copyText('curl -fsSL https://github.com/ModelsLab/modelslab-cli/releases/latest/download/modelslab_linux_amd64.deb -o modelslab.deb && sudo dpkg -i modelslab.deb', this)" aria-label="Copy">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-    </button>
-    <pre><span class="comment"># Install via .deb package</span>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">Terminal</span>
+        <button class="copy-btn" onclick="copyText('curl -fsSL https://github.com/ModelsLab/modelslab-cli/releases/latest/download/modelslab_linux_amd64.deb -o modelslab.deb && sudo dpkg -i modelslab.deb', this)" aria-label="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="code-body"><span class="comment"># Install via .deb package</span>
 <span class="prompt">$ </span>curl -fsSL https://github.com/ModelsLab/modelslab-cli/releases/latest/download/modelslab_linux_amd64.deb \
     -o modelslab.deb && sudo dpkg -i modelslab.deb</pre>
+    </div>
   </div>
 
   <div class="install-panel" id="panel-windows">
-    <button class="copy-btn" onclick="copyText('scoop bucket add modelslab https://github.com/ModelsLab/scoop-bucket && scoop install modelslab', this)" aria-label="Copy">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-    </button>
-    <pre><span class="comment"># Install via Scoop</span>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">Terminal</span>
+        <button class="copy-btn" onclick="copyText('scoop bucket add modelslab https://github.com/ModelsLab/scoop-bucket && scoop install modelslab', this)" aria-label="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="code-body"><span class="comment"># Install via Scoop</span>
 <span class="prompt">&gt; </span>scoop bucket add modelslab https://github.com/ModelsLab/scoop-bucket
 <span class="prompt">&gt; </span>scoop install modelslab</pre>
+    </div>
   </div>
 
   <div class="install-panel" id="panel-direct">
-    <button class="copy-btn" onclick="copyText('curl -fsSL https://modelslab.sh/install.sh | sh', this)" aria-label="Copy">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-    </button>
-    <pre><span class="comment"># Install via shell script (macOS, Linux)</span>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">Terminal</span>
+        <button class="copy-btn" onclick="copyText('curl -fsSL https://modelslab.sh/install.sh | sh', this)" aria-label="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="code-body"><span class="comment"># Install via shell script (macOS, Linux)</span>
 <span class="prompt">$ </span>curl -fsSL https://modelslab.sh/install.sh | sh</pre>
+    </div>
   </div>
 
   <div class="install-panel" id="panel-go">
-    <button class="copy-btn" onclick="copyText('go install github.com/ModelsLab/modelslab-cli/cmd/modelslab@latest', this)" aria-label="Copy">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-    </button>
-    <pre><span class="comment"># Install via Go</span>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">Terminal</span>
+        <button class="copy-btn" onclick="copyText('go install github.com/ModelsLab/modelslab-cli/cmd/modelslab@latest', this)" aria-label="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="code-body"><span class="comment"># Install via Go</span>
 <span class="prompt">$ </span>go install github.com/ModelsLab/modelslab-cli/cmd/modelslab@latest</pre>
+    </div>
   </div>
 
   <p class="install-note">
@@ -1126,12 +1147,16 @@
       <h3>1. Authenticate</h3>
       <p class="step-desc">Log in with your ModelsLab API key.</p>
       <div class="code-block">
-        <button class="copy-btn" onclick="copyText('modelslab auth login', this)" aria-label="Copy">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-        </button>
-<span class="prompt">$ </span>modelslab auth login
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyText('modelslab auth login', this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="prompt">$ </span>modelslab auth login
 <span class="output">Enter API key: ********
-Authenticated successfully.</span>
+Authenticated successfully.</span></div>
       </div>
     </div>
 
@@ -1139,12 +1164,16 @@ Authenticated successfully.</span>
       <h3>2. Generate an image</h3>
       <p class="step-desc">Create AI-generated images from text prompts.</p>
       <div class="code-block">
-        <button class="copy-btn" onclick="copyText('modelslab image generate --prompt &quot;a futuristic cityscape at sunset&quot;', this)" aria-label="Copy">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-        </button>
-<span class="prompt">$ </span>modelslab image generate <span class="flag">--prompt</span> <span class="string">"a futuristic cityscape at sunset"</span>
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyText('modelslab image generate --prompt &quot;a futuristic cityscape at sunset&quot;', this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="prompt">$ </span>modelslab image generate <span class="flag">--prompt</span> <span class="string">"a futuristic cityscape at sunset"</span>
 <span class="output">Generating image...
-Saved to ./output_001.png</span>
+Saved to ./output_001.png</span></div>
       </div>
     </div>
 
@@ -1152,14 +1181,18 @@ Saved to ./output_001.png</span>
       <h3>3. Explore models</h3>
       <p class="step-desc">Search and discover available AI models.</p>
       <div class="code-block">
-        <button class="copy-btn" onclick="copyText('modelslab models search --query &quot;stable diffusion&quot;', this)" aria-label="Copy">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-        </button>
-<span class="prompt">$ </span>modelslab models search <span class="flag">--query</span> <span class="string">"stable diffusion"</span>
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyText('modelslab models search --query &quot;stable diffusion&quot;', this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="prompt">$ </span>modelslab models search <span class="flag">--query</span> <span class="string">"stable diffusion"</span>
 <span class="output">Found 24 models matching "stable diffusion"
   sdxl         Stable Diffusion XL         text2img
   sd-3.5       Stable Diffusion 3.5        text2img
-  ...</span>
+  ...</span></div>
       </div>
     </div>
   </div>
@@ -1180,13 +1213,18 @@ Saved to ./output_001.png</span>
       </div>
       <p class="step-desc">Register a new user. All fields are passed as flags for non-interactive execution. The password is sent as both password and password_confirmation automatically.</p>
       <div class="code-block">
-        <button class="copy-btn" onclick="copyText('modelslab auth signup --name &quot;John Doe&quot; --email &quot;john@example.com&quot; --password &quot;securePassword123&quot; --output json', this)" aria-label="Copy">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-        </button>
-<span class="prompt">$ </span>modelslab auth signup <span class="flag">--name</span> <span class="string">"John Doe"</span> \
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyText('modelslab auth signup --name &quot;John Doe&quot; --email &quot;john@example.com&quot; --password &quot;securePassword123&quot; --output json', this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="prompt">$ </span>modelslab auth signup <span class="flag">--name</span> <span class="string">"John Doe"</span> \
     <span class="flag">--email</span> <span class="string">"john@example.com"</span> \
     <span class="flag">--password</span> <span class="string">"securePassword123"</span> \
     <span class="flag">--output</span> json</div>
+      </div>
       <p class="agent-note">On success, the user receives a verification email. The response includes account details as JSON when <code>--output json</code> is used.</p>
     </div>
 
@@ -1198,11 +1236,19 @@ Saved to ./output_001.png</span>
       </div>
       <p class="step-desc">After signup, the user receives a verification email containing a token. Use it to verify the account. If the email is lost, resend it.</p>
       <div class="code-block">
-<span class="comment"># Verify with the token from the email</span>
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyBlock(this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="comment"># Verify with the token from the email</span>
 <span class="prompt">$ </span>modelslab auth verify-email <span class="flag">--token</span> <span class="string">"abc123-verification-token"</span>
 
 <span class="comment"># If the user didn't receive the email, resend it</span>
 <span class="prompt">$ </span>modelslab auth resend-verification <span class="flag">--email</span> <span class="string">"john@example.com"</span></div>
+      </div>
     </div>
 
     <!-- Step 3: Login -->
@@ -1213,14 +1259,19 @@ Saved to ./output_001.png</span>
       </div>
       <p class="step-desc">Authenticate with email and password. Returns a bearer token and an API key. Both are automatically stored in the OS keychain (macOS Keychain, Windows Credential Manager, or Linux Secret Service).</p>
       <div class="code-block">
-        <button class="copy-btn" onclick="copyText('modelslab auth login --email &quot;john@example.com&quot; --password &quot;securePassword123&quot; --output json', this)" aria-label="Copy">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-        </button>
-<span class="prompt">$ </span>modelslab auth login <span class="flag">--email</span> <span class="string">"john@example.com"</span> \
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyText('modelslab auth login --email &quot;john@example.com&quot; --password &quot;securePassword123&quot; --expiry &quot;1_month&quot; --device-name &quot;agent-server-01&quot; --output json', this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="prompt">$ </span>modelslab auth login <span class="flag">--email</span> <span class="string">"john@example.com"</span> \
     <span class="flag">--password</span> <span class="string">"securePassword123"</span> \
     <span class="flag">--expiry</span> <span class="string">"1_month"</span> \
     <span class="flag">--device-name</span> <span class="string">"agent-server-01"</span> \
     <span class="flag">--output</span> json</div>
+      </div>
       <p class="agent-note">The <code>--expiry</code> flag accepts: <code>1_week</code>, <code>1_month</code>, <code>3_months</code>, <code>6_months</code>, <code>1_year</code>, <code>never</code>. Default: <code>1_month</code>. The bearer token is used for control-plane API calls; the API key is used for generation endpoints. Both are auto-stored per profile.</p>
     </div>
 
@@ -1232,11 +1283,16 @@ Saved to ./output_001.png</span>
       </div>
       <p class="step-desc">Verify that credentials are stored and valid. Returns profile name, email, masked token, and whether an API key is present.</p>
       <div class="code-block">
-        <button class="copy-btn" onclick="copyText('modelslab auth status --output json', this)" aria-label="Copy">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-        </button>
-<span class="prompt">$ </span>modelslab auth status <span class="flag">--output</span> json
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyText('modelslab auth status --output json', this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="prompt">$ </span>modelslab auth status <span class="flag">--output</span> json
 <span class="output">{"profile":"default","email":"john@example.com","authenticated":true,"has_api_key":true}</span></div>
+      </div>
     </div>
 
     <!-- Step 5: Token management -->
@@ -1247,7 +1303,14 @@ Saved to ./output_001.png</span>
       </div>
       <p class="step-desc">List active sessions, revoke specific tokens, or revoke all other sessions.</p>
       <div class="code-block">
-<span class="comment"># List all active tokens/sessions</span>
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyBlock(this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="comment"># List all active tokens/sessions</span>
 <span class="prompt">$ </span>modelslab auth tokens <span class="flag">--output</span> json
 
 <span class="comment"># Revoke a specific token by ID</span>
@@ -1258,6 +1321,7 @@ Saved to ./output_001.png</span>
 
 <span class="comment"># Revoke all tokens and log out everywhere</span>
 <span class="prompt">$ </span>modelslab auth logout-all</div>
+      </div>
     </div>
 
     <!-- Step 6: Password recovery -->
@@ -1268,7 +1332,14 @@ Saved to ./output_001.png</span>
       </div>
       <p class="step-desc">Trigger a password reset email, then reset with the token received. All flags are non-interactive.</p>
       <div class="code-block">
-<span class="comment"># Step 1: Send reset email</span>
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyBlock(this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="comment"># Step 1: Send reset email</span>
 <span class="prompt">$ </span>modelslab auth forgot-password <span class="flag">--email</span> <span class="string">"john@example.com"</span>
 
 <span class="comment"># Step 2: Reset with the token from the email</span>
@@ -1276,6 +1347,7 @@ Saved to ./output_001.png</span>
     <span class="flag">--email</span> <span class="string">"john@example.com"</span> \
     <span class="flag">--token</span> <span class="string">"reset-token-from-email"</span> \
     <span class="flag">--password</span> <span class="string">"newSecurePassword456"</span></div>
+      </div>
     </div>
 
     <!-- Step 7: Switch accounts / Teams -->
@@ -1286,7 +1358,14 @@ Saved to ./output_001.png</span>
       </div>
       <p class="step-desc">Use profiles to manage multiple accounts. Switch to team member context for team operations. Logout clears local credentials and revokes the server-side token.</p>
       <div class="code-block">
-<span class="comment"># Use a named profile for a second account</span>
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyBlock(this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="comment"># Use a named profile for a second account</span>
 <span class="prompt">$ </span>modelslab auth login <span class="flag">--profile</span> <span class="string">"work"</span> <span class="flag">--email</span> <span class="string">"work@corp.com"</span> <span class="flag">--password</span> <span class="string">"..."</span>
 
 <span class="comment"># Switch to a team member context</span>
@@ -1297,6 +1376,7 @@ Saved to ./output_001.png</span>
 
 <span class="comment"># Logout (clears local keychain + revokes server token)</span>
 <span class="prompt">$ </span>modelslab auth logout</div>
+      </div>
     </div>
   </div>
 </section>
@@ -1552,7 +1632,14 @@ Saved to ./output_001.png</span>
       <h3>Direct CLI execution</h3>
       <p class="int-desc">Run any command with <code style="background:var(--bg-code);padding:2px 6px;border-radius:4px;font-size:12px;">--output json</code> for machine-readable output and <code style="background:var(--bg-code);padding:2px 6px;border-radius:4px;font-size:12px;">--jq</code> to extract specific fields. Every command supports both flags.</p>
       <div class="code-block">
-<span class="comment"># Get wallet balance as a number</span>
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyBlock(this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="comment"># Get wallet balance as a number</span>
 <span class="prompt">$ </span>modelslab wallet balance <span class="flag">--output</span> json <span class="flag">--jq</span> <span class="string">'.data.wallet.balance'</span>
 <span class="output">142.50</span>
 
@@ -1564,13 +1651,21 @@ Saved to ./output_001.png</span>
 <span class="comment"># List models filtered by feature</span>
 <span class="prompt">$ </span>modelslab models search <span class="flag">--feature</span> <span class="string">"video"</span> \
     <span class="flag">--output</span> json <span class="flag">--jq</span> <span class="string">'.data[].model_id'</span></div>
+      </div>
     </div>
 
     <div class="integration-card">
       <h3>MCP server mode</h3>
       <p class="int-desc">Start a Model Context Protocol server that exposes all CLI tools to AI assistants. Works with Claude Code, Claude Desktop, Cursor, and any MCP-compatible client.</p>
       <div class="code-block">
-<span class="comment"># Start MCP server (stdio transport)</span>
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyBlock(this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="comment"># Start MCP server (stdio transport)</span>
 <span class="prompt">$ </span>modelslab mcp serve <span class="flag">--transport</span> <span class="string">"stdio"</span>
 
 <span class="comment"># Start MCP server (SSE transport on port 8080)</span>
@@ -1578,13 +1673,21 @@ Saved to ./output_001.png</span>
 
 <span class="comment"># List all available MCP tools</span>
 <span class="prompt">$ </span>modelslab mcp tools <span class="flag">--output</span> json</div>
+      </div>
     </div>
 
     <div class="integration-card">
       <h3>Shell scripting</h3>
       <p class="int-desc">Pipe commands together, use exit codes for flow control, and build automated workflows. All commands exit with structured codes for error handling.</p>
       <div class="code-block">
-<span class="comment"># Full automated workflow: signup, fund, generate</span>
+        <div class="code-header">
+          <span class="code-lang">Bash</span>
+          <button class="copy-btn" onclick="copyBlock(this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="comment"># Full automated workflow: signup, fund, generate</span>
 <span class="prompt">$ </span>modelslab auth signup <span class="flag">--name</span> <span class="string">"Bot"</span> \
     <span class="flag">--email</span> <span class="string">"bot@co.com"</span> <span class="flag">--password</span> <span class="string">"..."</span> && \
   modelslab auth login <span class="flag">--email</span> <span class="string">"bot@co.com"</span> \
@@ -1595,6 +1698,7 @@ Saved to ./output_001.png</span>
 <span class="prompt">$ </span>modelslab auth login <span class="flag">--email</span> <span class="string">"x"</span> <span class="flag">--password</span> <span class="string">"y"</span>; \
   echo <span class="string">"exit: $?"</span>
 <span class="output">exit: 3</span> <span class="comment"># 3 = auth error</span></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1610,7 +1714,14 @@ Saved to ./output_001.png</span>
       <h3>JSON output and JQ filtering</h3>
       <p class="auto-desc">Every command supports <code style="background:var(--bg-code);padding:2px 6px;border-radius:4px;font-size:12px;">--output json</code> (or <code style="background:var(--bg-code);padding:2px 6px;border-radius:4px;font-size:12px;">-o json</code>) for structured output, and <code style="background:var(--bg-code);padding:2px 6px;border-radius:4px;font-size:12px;">--jq</code> for inline filtering without piping to external tools.</p>
       <div class="code-block">
-<span class="comment"># Full JSON response</span>
+        <div class="code-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyBlock(this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="comment"># Full JSON response</span>
 <span class="prompt">$ </span>modelslab profile get <span class="flag">-o</span> json
 
 <span class="comment"># Extract just the email</span>
@@ -1622,56 +1733,69 @@ Saved to ./output_001.png</span>
 <span class="comment"># Check subscription status</span>
 <span class="prompt">$ </span>modelslab subscriptions status <span class="flag">--id</span> <span class="string">"sub_123"</span> \
     <span class="flag">-o</span> json <span class="flag">--jq</span> <span class="string">'.data.status'</span></div>
+      </div>
     </div>
 
     <div class="automation-card">
       <h3>Exit codes</h3>
       <p class="auto-desc">All commands return typed exit codes. Use these for branching in scripts and agents.</p>
-      <table class="exit-code-table">
-        <thead>
-          <tr><th>Code</th><th>Constant</th><th>Meaning</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>0</td><td>ExitSuccess</td><td>Command completed successfully</td></tr>
-          <tr><td>1</td><td>ExitGeneralError</td><td>General/unexpected error</td></tr>
-          <tr><td>2</td><td>ExitUsageError</td><td>Invalid flags or arguments</td></tr>
-          <tr><td>3</td><td>ExitAuthError</td><td>Authentication failed (bad credentials, expired token)</td></tr>
-          <tr><td>4</td><td>ExitRateLimited</td><td>API rate limit exceeded</td></tr>
-          <tr><td>5</td><td>ExitNotFound</td><td>Resource not found</td></tr>
-          <tr><td>6</td><td>ExitPaymentError</td><td>Payment or billing error</td></tr>
-          <tr><td>7</td><td>ExitGenTimeout</td><td>Generation timed out (still processing)</td></tr>
-          <tr><td>10</td><td>ExitNetworkError</td><td>Network connectivity error</td></tr>
-        </tbody>
-      </table>
+      <div class="table-wrap">
+        <table class="exit-code-table">
+          <thead>
+            <tr><th>Code</th><th>Constant</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>ExitSuccess</td><td>Command completed successfully</td></tr>
+            <tr><td>1</td><td>ExitGeneralError</td><td>General/unexpected error</td></tr>
+            <tr><td>2</td><td>ExitUsageError</td><td>Invalid flags or arguments</td></tr>
+            <tr><td>3</td><td>ExitAuthError</td><td>Authentication failed (bad credentials, expired token)</td></tr>
+            <tr><td>4</td><td>ExitRateLimited</td><td>API rate limit exceeded</td></tr>
+            <tr><td>5</td><td>ExitNotFound</td><td>Resource not found</td></tr>
+            <tr><td>6</td><td>ExitPaymentError</td><td>Payment or billing error</td></tr>
+            <tr><td>7</td><td>ExitGenTimeout</td><td>Generation timed out (still processing)</td></tr>
+            <tr><td>10</td><td>ExitNetworkError</td><td>Network connectivity error</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="automation-card">
       <h3>Environment variables</h3>
       <p class="auto-desc">Override any configuration via environment variables. These take precedence over config files but are overridden by CLI flags.</p>
-      <table class="env-table">
-        <thead>
-          <tr><th>Variable</th><th>Description</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>MODELSLAB_API_KEY</td><td>API key for generation endpoints (overrides keychain)</td></tr>
-          <tr><td>MODELSLAB_TOKEN</td><td>Bearer token for control-plane API (overrides keychain)</td></tr>
-          <tr><td>MODELSLAB_BASE_URL</td><td>Override API base URL (for self-hosted or staging)</td></tr>
-          <tr><td>NO_COLOR</td><td>Disable colored terminal output (set to any value)</td></tr>
-        </tbody>
-      </table>
+      <div class="table-wrap">
+        <table class="env-table">
+          <thead>
+            <tr><th>Variable</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>MODELSLAB_API_KEY</td><td>API key for generation endpoints (overrides keychain)</td></tr>
+            <tr><td>MODELSLAB_TOKEN</td><td>Bearer token for control-plane API (overrides keychain)</td></tr>
+            <tr><td>MODELSLAB_BASE_URL</td><td>Override API base URL (for self-hosted or staging)</td></tr>
+            <tr><td>NO_COLOR</td><td>Disable colored terminal output (set to any value)</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="automation-card">
       <h3>Global flags</h3>
       <p class="auto-desc">These flags are available on every command and control behavior across the entire CLI.</p>
       <div class="code-block">
-<span class="comment"># Available on all commands:</span>
+        <div class="code-header">
+          <span class="code-lang">Reference</span>
+          <button class="copy-btn" onclick="copyBlock(this)" aria-label="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="code-body"><span class="comment"># Available on all commands:</span>
 <span class="flag">--output</span>, <span class="flag">-o</span> <span class="string">"json"</span>       <span class="comment"># Output format: human (default), json</span>
 <span class="flag">--jq</span> <span class="string">"&lt;expression&gt;"</span>        <span class="comment"># Filter JSON output with jq expression</span>
 <span class="flag">--profile</span> <span class="string">"&lt;name&gt;"</span>        <span class="comment"># Auth profile to use (default: "default")</span>
 <span class="flag">--api-key</span> <span class="string">"&lt;key&gt;"</span>         <span class="comment"># Override API key for this command</span>
 <span class="flag">--base-url</span> <span class="string">"&lt;url&gt;"</span>       <span class="comment"># Override API base URL</span>
 <span class="flag">--no-color</span>               <span class="comment"># Disable colored output</span></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1880,17 +2004,37 @@ Saved to ./output_001.png</span>
   </div>
 </footer>
 
+<!-- Back to top -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0})" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
 <script>
   // ========== Copy to clipboard ==========
+  var copySvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+  var checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+
   function copyText(text, btn) {
     navigator.clipboard.writeText(text).then(function() {
       btn.classList.add('copied');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+      btn.innerHTML = checkSvg + ' Copied!';
       setTimeout(function() {
         btn.classList.remove('copied');
-        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+        btn.innerHTML = copySvg + ' Copy';
       }, 2000);
     });
+  }
+
+  // Copy all commands from a code block (strips comments, prompts, output)
+  function copyBlock(btn) {
+    var body = btn.closest('.code-block').querySelector('.code-body');
+    var clone = body.cloneNode(true);
+    // Remove comments, output, and prompt spans
+    clone.querySelectorAll('.comment, .output, .prompt').forEach(function(el) { el.remove(); });
+    var text = clone.textContent;
+    // Clean up whitespace
+    text = text.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 0; }).join('\n');
+    copyText(text, btn);
   }
 
   // ========== Install tabs ==========
@@ -1898,7 +2042,6 @@ Saved to ./output_001.png</span>
     document.querySelectorAll('.install-tab').forEach(function(t) { t.classList.remove('active'); });
     document.querySelectorAll('.install-panel').forEach(function(p) { p.classList.remove('active'); });
 
-    // Find the tab button by matching text content
     var tabs = document.querySelectorAll('.install-tab');
     var tabMap = { macos: 0, linux: 1, windows: 2, direct: 3, go: 4 };
     if (tabMap[id] !== undefined) tabs[tabMap[id]].classList.add('active');
@@ -1915,14 +2058,31 @@ Saved to ./output_001.png</span>
 
   // ========== Mobile menu ==========
   function toggleMobileMenu() {
-    document.getElementById('navLinks').classList.toggle('open');
+    var nav = document.getElementById('navLinks');
+    var overlay = document.getElementById('navOverlay');
+    nav.classList.toggle('open');
+    overlay.classList.toggle('open');
+    document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
   }
 
-  // Close mobile menu on link click
+  function closeMobileMenu() {
+    document.getElementById('navLinks').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
   document.querySelectorAll('.nav-links a').forEach(function(link) {
-    link.addEventListener('click', function() {
-      document.getElementById('navLinks').classList.remove('open');
-    });
+    link.addEventListener('click', closeMobileMenu);
+  });
+
+  // ========== Back to top ==========
+  var backBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 600) {
+      backBtn.classList.add('visible');
+    } else {
+      backBtn.classList.remove('visible');
+    }
   });
 
   // ========== Active nav on scroll ==========

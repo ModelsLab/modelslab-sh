@@ -20,6 +20,7 @@
       --text: #e5e5e5;
       --text-muted: #737373;
       --green: #22c55e;
+      --amber: #f59e0b;
       --border: #262626;
       --radius: 8px;
       --radius-lg: 12px;
@@ -210,7 +211,7 @@
     .hero-tagline {
       font-size: clamp(18px, 2.5vw, 22px);
       color: var(--text-muted);
-      max-width: 520px;
+      max-width: 620px;
       margin: 0 auto 48px;
       line-height: 1.5;
     }
@@ -438,6 +439,323 @@
     .quickstart-card .comment { color: var(--text-muted); }
     .quickstart-card .output { color: var(--text-muted); user-select: none; }
 
+    /* ========== AGENT GUIDE ========== */
+    .agent-flow {
+      display: grid;
+      gap: 20px;
+    }
+
+    .agent-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      transition: border-color 0.2s;
+    }
+
+    .agent-step:hover { border-color: var(--accent); }
+
+    .agent-step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .agent-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .agent-step h3 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .agent-step .step-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .agent-step .code-block {
+      background: var(--bg-code);
+      border-radius: 6px;
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .agent-step .code-block .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+
+    .agent-step .prompt { color: var(--green); user-select: none; }
+    .agent-step .flag { color: var(--accent); }
+    .agent-step .string { color: #f59e0b; }
+    .agent-step .comment { color: var(--text-muted); }
+    .agent-step .output { color: var(--text-muted); user-select: none; }
+
+    .agent-note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .agent-note code {
+      background: var(--bg-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* ========== API COVERAGE ========== */
+    .api-coverage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 12px;
+    }
+
+    .api-group {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .api-group:hover { border-color: var(--accent); }
+
+    .api-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .api-group-header h3 {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .api-group-header .count {
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-weight: 600;
+    }
+
+    .api-cmd-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .api-cmd-list li {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--bg-code);
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    /* ========== AGENT INTEGRATION ========== */
+    .integration-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .integration-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      transition: border-color 0.2s;
+    }
+
+    .integration-card:hover { border-color: var(--accent); }
+
+    .integration-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .integration-card .int-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .integration-card .code-block {
+      background: var(--bg-code);
+      border-radius: 6px;
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .integration-card .code-block .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+
+    .integration-card .prompt { color: var(--green); user-select: none; }
+    .integration-card .flag { color: var(--accent); }
+    .integration-card .string { color: #f59e0b; }
+    .integration-card .comment { color: var(--text-muted); }
+    .integration-card .output { color: var(--text-muted); user-select: none; }
+
+    /* ========== OUTPUT & AUTOMATION ========== */
+    .automation-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .automation-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+
+    .automation-card:hover { border-color: var(--accent); }
+
+    .automation-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .automation-card .auto-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .automation-card .code-block {
+      background: var(--bg-code);
+      border-radius: 6px;
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .automation-card .code-block .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+
+    .automation-card .prompt { color: var(--green); user-select: none; }
+    .automation-card .flag { color: var(--accent); }
+    .automation-card .string { color: #f59e0b; }
+    .automation-card .comment { color: var(--text-muted); }
+    .automation-card .output { color: var(--text-muted); user-select: none; }
+
+    .exit-code-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .exit-code-table th {
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .exit-code-table td {
+      padding: 6px 12px;
+      border-bottom: 1px solid rgba(38, 38, 38, 0.5);
+    }
+
+    .exit-code-table td:first-child {
+      font-family: var(--font-mono);
+      color: var(--accent);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .exit-code-table td:nth-child(2) {
+      font-family: var(--font-mono);
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .exit-code-table td:last-child {
+      color: var(--text-muted);
+    }
+
+    .env-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .env-table th {
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .env-table td {
+      padding: 6px 12px;
+      border-bottom: 1px solid rgba(38, 38, 38, 0.5);
+    }
+
+    .env-table td:first-child {
+      font-family: var(--font-mono);
+      color: var(--green);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .env-table td:last-child {
+      color: var(--text-muted);
+    }
+
     /* ========== FEATURES ========== */
     .features-grid {
       display: grid;
@@ -638,6 +956,8 @@
 
       .features-grid { grid-template-columns: 1fr; }
       .commands-grid { grid-template-columns: 1fr; }
+      .api-coverage-grid { grid-template-columns: 1fr; }
+      .integration-grid { grid-template-columns: 1fr; }
 
       .footer-inner {
         flex-direction: column;
@@ -670,6 +990,8 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="#install">Install</a></li>
       <li><a href="#quickstart">Quick Start</a></li>
+      <li><a href="#agent-guide">Agent Guide</a></li>
+      <li><a href="#api-coverage">API Coverage</a></li>
       <li><a href="#features">Features</a></li>
       <li><a href="#commands">Commands</a></li>
       <li><div class="nav-sep"></div></li>
@@ -703,7 +1025,7 @@
   </div>
 
   <h1><span class="gradient">ModelsLab CLI</span></h1>
-  <p class="hero-tagline">AI generation from the terminal. Images, video, audio, 3D, and more &mdash; powered by 105+ commands.</p>
+  <p class="hero-tagline">Agent-first AI platform access. Sign up users, manage accounts, generate content, handle billing &mdash; 105+ commands, all programmatic, all non-interactive.</p>
 
   <div class="hero-install">
     <span class="prompt">$</span>
@@ -837,10 +1159,521 @@ Saved to ./output_001.png</span>
   </div>
 </section>
 
+<!-- ========== AGENT GUIDE ========== -->
+<section id="agent-guide">
+  <p class="section-label">Agent Guide</p>
+  <h2 class="section-title">Complete auth flow for AI agents</h2>
+  <p class="section-desc">Every command accepts flags for non-interactive execution. Agents can create accounts, verify emails, log in, and manage tokens without any human interaction.</p>
+
+  <div class="agent-flow">
+    <!-- Step 1: Signup -->
+    <div class="agent-step">
+      <div class="agent-step-header">
+        <span class="agent-step-num">1</span>
+        <h3>Create an account</h3>
+      </div>
+      <p class="step-desc">Register a new user. All fields are passed as flags for non-interactive execution. The password is sent as both password and password_confirmation automatically.</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyText('modelslab auth signup --name &quot;John Doe&quot; --email &quot;john@example.com&quot; --password &quot;securePassword123&quot; --output json', this)" aria-label="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+<span class="prompt">$ </span>modelslab auth signup <span class="flag">--name</span> <span class="string">"John Doe"</span> \
+    <span class="flag">--email</span> <span class="string">"john@example.com"</span> \
+    <span class="flag">--password</span> <span class="string">"securePassword123"</span> \
+    <span class="flag">--output</span> json</div>
+      <p class="agent-note">On success, the user receives a verification email. The response includes account details as JSON when <code>--output json</code> is used.</p>
+    </div>
+
+    <!-- Step 2: Verify email -->
+    <div class="agent-step">
+      <div class="agent-step-header">
+        <span class="agent-step-num">2</span>
+        <h3>Verify email address</h3>
+      </div>
+      <p class="step-desc">After signup, the user receives a verification email containing a token. Use it to verify the account. If the email is lost, resend it.</p>
+      <div class="code-block">
+<span class="comment"># Verify with the token from the email</span>
+<span class="prompt">$ </span>modelslab auth verify-email <span class="flag">--token</span> <span class="string">"abc123-verification-token"</span>
+
+<span class="comment"># If the user didn't receive the email, resend it</span>
+<span class="prompt">$ </span>modelslab auth resend-verification <span class="flag">--email</span> <span class="string">"john@example.com"</span></div>
+    </div>
+
+    <!-- Step 3: Login -->
+    <div class="agent-step">
+      <div class="agent-step-header">
+        <span class="agent-step-num">3</span>
+        <h3>Log in</h3>
+      </div>
+      <p class="step-desc">Authenticate with email and password. Returns a bearer token and an API key. Both are automatically stored in the OS keychain (macOS Keychain, Windows Credential Manager, or Linux Secret Service).</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyText('modelslab auth login --email &quot;john@example.com&quot; --password &quot;securePassword123&quot; --output json', this)" aria-label="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+<span class="prompt">$ </span>modelslab auth login <span class="flag">--email</span> <span class="string">"john@example.com"</span> \
+    <span class="flag">--password</span> <span class="string">"securePassword123"</span> \
+    <span class="flag">--expiry</span> <span class="string">"1_month"</span> \
+    <span class="flag">--device-name</span> <span class="string">"agent-server-01"</span> \
+    <span class="flag">--output</span> json</div>
+      <p class="agent-note">The <code>--expiry</code> flag accepts: <code>1_week</code>, <code>1_month</code>, <code>3_months</code>, <code>6_months</code>, <code>1_year</code>, <code>never</code>. Default: <code>1_month</code>. The bearer token is used for control-plane API calls; the API key is used for generation endpoints. Both are auto-stored per profile.</p>
+    </div>
+
+    <!-- Step 4: Check status -->
+    <div class="agent-step">
+      <div class="agent-step-header">
+        <span class="agent-step-num">4</span>
+        <h3>Check auth status</h3>
+      </div>
+      <p class="step-desc">Verify that credentials are stored and valid. Returns profile name, email, masked token, and whether an API key is present.</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyText('modelslab auth status --output json', this)" aria-label="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+<span class="prompt">$ </span>modelslab auth status <span class="flag">--output</span> json
+<span class="output">{"profile":"default","email":"john@example.com","authenticated":true,"has_api_key":true}</span></div>
+    </div>
+
+    <!-- Step 5: Token management -->
+    <div class="agent-step">
+      <div class="agent-step-header">
+        <span class="agent-step-num">5</span>
+        <h3>Manage tokens</h3>
+      </div>
+      <p class="step-desc">List active sessions, revoke specific tokens, or revoke all other sessions.</p>
+      <div class="code-block">
+<span class="comment"># List all active tokens/sessions</span>
+<span class="prompt">$ </span>modelslab auth tokens <span class="flag">--output</span> json
+
+<span class="comment"># Revoke a specific token by ID</span>
+<span class="prompt">$ </span>modelslab auth revoke-token <span class="flag">--id</span> <span class="string">"42"</span>
+
+<span class="comment"># Revoke all tokens except the current session</span>
+<span class="prompt">$ </span>modelslab auth revoke-others
+
+<span class="comment"># Revoke all tokens and log out everywhere</span>
+<span class="prompt">$ </span>modelslab auth logout-all</div>
+    </div>
+
+    <!-- Step 6: Password recovery -->
+    <div class="agent-step">
+      <div class="agent-step-header">
+        <span class="agent-step-num">6</span>
+        <h3>Password recovery</h3>
+      </div>
+      <p class="step-desc">Trigger a password reset email, then reset with the token received. All flags are non-interactive.</p>
+      <div class="code-block">
+<span class="comment"># Step 1: Send reset email</span>
+<span class="prompt">$ </span>modelslab auth forgot-password <span class="flag">--email</span> <span class="string">"john@example.com"</span>
+
+<span class="comment"># Step 2: Reset with the token from the email</span>
+<span class="prompt">$ </span>modelslab auth reset-password \
+    <span class="flag">--email</span> <span class="string">"john@example.com"</span> \
+    <span class="flag">--token</span> <span class="string">"reset-token-from-email"</span> \
+    <span class="flag">--password</span> <span class="string">"newSecurePassword456"</span></div>
+    </div>
+
+    <!-- Step 7: Switch accounts / Teams -->
+    <div class="agent-step">
+      <div class="agent-step-header">
+        <span class="agent-step-num">7</span>
+        <h3>Multi-account and team context</h3>
+      </div>
+      <p class="step-desc">Use profiles to manage multiple accounts. Switch to team member context for team operations. Logout clears local credentials and revokes the server-side token.</p>
+      <div class="code-block">
+<span class="comment"># Use a named profile for a second account</span>
+<span class="prompt">$ </span>modelslab auth login <span class="flag">--profile</span> <span class="string">"work"</span> <span class="flag">--email</span> <span class="string">"work@corp.com"</span> <span class="flag">--password</span> <span class="string">"..."</span>
+
+<span class="comment"># Switch to a team member context</span>
+<span class="prompt">$ </span>modelslab auth switch-account <span class="flag">--member-id</span> <span class="string">"member-uuid"</span>
+
+<span class="comment"># Switch back to personal account</span>
+<span class="prompt">$ </span>modelslab auth switch-account
+
+<span class="comment"># Logout (clears local keychain + revokes server token)</span>
+<span class="prompt">$ </span>modelslab auth logout</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== COMPLETE API COVERAGE ========== -->
+<section id="api-coverage">
+  <p class="section-label">Complete API Coverage</p>
+  <h2 class="section-title">Every command at a glance</h2>
+  <p class="section-desc">14 command groups, 105+ commands. Every endpoint in the ModelsLab platform is accessible from the CLI.</p>
+
+  <div class="api-coverage-grid">
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>auth</h3>
+        <span class="count">12 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>signup</li>
+        <li>login</li>
+        <li>logout</li>
+        <li>logout-all</li>
+        <li>status</li>
+        <li>verify-email</li>
+        <li>resend-verification</li>
+        <li>forgot-password</li>
+        <li>reset-password</li>
+        <li>tokens</li>
+        <li>revoke-token</li>
+        <li>revoke-others</li>
+        <li>switch-account</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>profile</h3>
+        <span class="count">5 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>get</li>
+        <li>update</li>
+        <li>update-password</li>
+        <li>update-socials</li>
+        <li>update-preferences</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>keys</h3>
+        <span class="count">5 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>list</li>
+        <li>create</li>
+        <li>get</li>
+        <li>update</li>
+        <li>delete</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>models</h3>
+        <span class="count">5 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>search</li>
+        <li>detail</li>
+        <li>filters</li>
+        <li>tags</li>
+        <li>providers</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>generate</h3>
+        <span class="count">20 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>image</li>
+        <li>image-to-image</li>
+        <li>inpaint</li>
+        <li>video</li>
+        <li>image-to-video</li>
+        <li>video-to-video</li>
+        <li>lip-sync</li>
+        <li>motion-control</li>
+        <li>tts</li>
+        <li>stt</li>
+        <li>voice-to-voice</li>
+        <li>music</li>
+        <li>sfx</li>
+        <li>dubbing</li>
+        <li>song-extend</li>
+        <li>song-inpaint</li>
+        <li>text-to-3d</li>
+        <li>image-to-3d</li>
+        <li>chat</li>
+        <li>fetch</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>billing</h3>
+        <span class="count">13 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>overview</li>
+        <li>payment-methods</li>
+        <li>add-payment-method</li>
+        <li>set-default</li>
+        <li>remove</li>
+        <li>info</li>
+        <li>update-info</li>
+        <li>invoices</li>
+        <li>invoice</li>
+        <li>invoice-pdf</li>
+        <li>stripe-config</li>
+        <li>payment-link</li>
+        <li>setup-intent</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>wallet</h3>
+        <span class="count">10 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>balance</li>
+        <li>fund</li>
+        <li>confirm-checkout</li>
+        <li>transactions</li>
+        <li>auto-funding</li>
+        <li>disable-auto-funding</li>
+        <li>withdraw</li>
+        <li>validate-coupon</li>
+        <li>redeem-coupon</li>
+        <li>payment-status</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>subscriptions</h3>
+        <span class="count">10 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>plans</li>
+        <li>list</li>
+        <li>create</li>
+        <li>confirm-checkout</li>
+        <li>status</li>
+        <li>update</li>
+        <li>pause</li>
+        <li>resume</li>
+        <li>reset-cycle</li>
+        <li>charge-amount</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>teams</h3>
+        <span class="count">7 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>list</li>
+        <li>invite</li>
+        <li>get</li>
+        <li>update</li>
+        <li>remove</li>
+        <li>resend-invite</li>
+        <li>accept-invite</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>usage</h3>
+        <span class="count">3 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>summary</li>
+        <li>products</li>
+        <li>history</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>config</h3>
+        <span class="count">6 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>set</li>
+        <li>get</li>
+        <li>list</li>
+        <li>profiles list</li>
+        <li>profiles use</li>
+        <li>profiles delete</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>mcp</h3>
+        <span class="count">2 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>serve</li>
+        <li>tools</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>docs</h3>
+        <span class="count">2 commands</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>openapi</li>
+        <li>changelog</li>
+      </ul>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-header">
+        <h3>completion</h3>
+        <span class="count">4 shells</span>
+      </div>
+      <ul class="api-cmd-list">
+        <li>bash</li>
+        <li>zsh</li>
+        <li>fish</li>
+        <li>powershell</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== AGENT INTEGRATION ========== -->
+<section id="agent-integration">
+  <p class="section-label">Agent Integration</p>
+  <h2 class="section-title">Three ways to connect</h2>
+  <p class="section-desc">Use the CLI directly, as an MCP server, or compose commands in shell scripts.</p>
+
+  <div class="integration-grid">
+    <div class="integration-card">
+      <h3>Direct CLI execution</h3>
+      <p class="int-desc">Run any command with <code style="background:var(--bg-code);padding:2px 6px;border-radius:4px;font-size:12px;">--output json</code> for machine-readable output and <code style="background:var(--bg-code);padding:2px 6px;border-radius:4px;font-size:12px;">--jq</code> to extract specific fields. Every command supports both flags.</p>
+      <div class="code-block">
+<span class="comment"># Get wallet balance as a number</span>
+<span class="prompt">$ </span>modelslab wallet balance <span class="flag">--output</span> json <span class="flag">--jq</span> <span class="string">'.data.wallet.balance'</span>
+<span class="output">142.50</span>
+
+<span class="comment"># Generate image and extract output URL</span>
+<span class="prompt">$ </span>modelslab generate image <span class="flag">--prompt</span> <span class="string">"a logo"</span> \
+    <span class="flag">--output</span> json <span class="flag">--jq</span> <span class="string">'.output[0]'</span>
+<span class="output">https://cdn.modelslab.com/gen/abc123.png</span>
+
+<span class="comment"># List models filtered by feature</span>
+<span class="prompt">$ </span>modelslab models search <span class="flag">--feature</span> <span class="string">"video"</span> \
+    <span class="flag">--output</span> json <span class="flag">--jq</span> <span class="string">'.data[].model_id'</span></div>
+    </div>
+
+    <div class="integration-card">
+      <h3>MCP server mode</h3>
+      <p class="int-desc">Start a Model Context Protocol server that exposes all CLI tools to AI assistants. Works with Claude Code, Claude Desktop, Cursor, and any MCP-compatible client.</p>
+      <div class="code-block">
+<span class="comment"># Start MCP server (stdio transport)</span>
+<span class="prompt">$ </span>modelslab mcp serve <span class="flag">--transport</span> <span class="string">"stdio"</span>
+
+<span class="comment"># Start MCP server (SSE transport on port 8080)</span>
+<span class="prompt">$ </span>modelslab mcp serve <span class="flag">--transport</span> <span class="string">"sse"</span> <span class="flag">--addr</span> <span class="string">":8080"</span>
+
+<span class="comment"># List all available MCP tools</span>
+<span class="prompt">$ </span>modelslab mcp tools <span class="flag">--output</span> json</div>
+    </div>
+
+    <div class="integration-card">
+      <h3>Shell scripting</h3>
+      <p class="int-desc">Pipe commands together, use exit codes for flow control, and build automated workflows. All commands exit with structured codes for error handling.</p>
+      <div class="code-block">
+<span class="comment"># Full automated workflow: signup, fund, generate</span>
+<span class="prompt">$ </span>modelslab auth signup <span class="flag">--name</span> <span class="string">"Bot"</span> \
+    <span class="flag">--email</span> <span class="string">"bot@co.com"</span> <span class="flag">--password</span> <span class="string">"..."</span> && \
+  modelslab auth login <span class="flag">--email</span> <span class="string">"bot@co.com"</span> \
+    <span class="flag">--password</span> <span class="string">"..."</span> && \
+  modelslab generate image <span class="flag">--prompt</span> <span class="string">"hello world"</span>
+
+<span class="comment"># Check exit code for error handling</span>
+<span class="prompt">$ </span>modelslab auth login <span class="flag">--email</span> <span class="string">"x"</span> <span class="flag">--password</span> <span class="string">"y"</span>; \
+  echo <span class="string">"exit: $?"</span>
+<span class="output">exit: 3</span> <span class="comment"># 3 = auth error</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== OUTPUT & AUTOMATION ========== -->
+<section id="automation">
+  <p class="section-label">Output &amp; Automation</p>
+  <h2 class="section-title">Machine-readable by default</h2>
+  <p class="section-desc">Structured output, JQ filtering, typed exit codes, and environment variable overrides. Everything an agent needs for reliable automation.</p>
+
+  <div class="automation-grid">
+    <div class="automation-card">
+      <h3>JSON output and JQ filtering</h3>
+      <p class="auto-desc">Every command supports <code style="background:var(--bg-code);padding:2px 6px;border-radius:4px;font-size:12px;">--output json</code> (or <code style="background:var(--bg-code);padding:2px 6px;border-radius:4px;font-size:12px;">-o json</code>) for structured output, and <code style="background:var(--bg-code);padding:2px 6px;border-radius:4px;font-size:12px;">--jq</code> for inline filtering without piping to external tools.</p>
+      <div class="code-block">
+<span class="comment"># Full JSON response</span>
+<span class="prompt">$ </span>modelslab profile get <span class="flag">-o</span> json
+
+<span class="comment"># Extract just the email</span>
+<span class="prompt">$ </span>modelslab profile get <span class="flag">-o</span> json <span class="flag">--jq</span> <span class="string">'.data.email'</span>
+
+<span class="comment"># Get API key IDs as a list</span>
+<span class="prompt">$ </span>modelslab keys list <span class="flag">-o</span> json <span class="flag">--jq</span> <span class="string">'.data[].id'</span>
+
+<span class="comment"># Check subscription status</span>
+<span class="prompt">$ </span>modelslab subscriptions status <span class="flag">--id</span> <span class="string">"sub_123"</span> \
+    <span class="flag">-o</span> json <span class="flag">--jq</span> <span class="string">'.data.status'</span></div>
+    </div>
+
+    <div class="automation-card">
+      <h3>Exit codes</h3>
+      <p class="auto-desc">All commands return typed exit codes. Use these for branching in scripts and agents.</p>
+      <table class="exit-code-table">
+        <thead>
+          <tr><th>Code</th><th>Constant</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0</td><td>ExitSuccess</td><td>Command completed successfully</td></tr>
+          <tr><td>1</td><td>ExitGeneralError</td><td>General/unexpected error</td></tr>
+          <tr><td>2</td><td>ExitUsageError</td><td>Invalid flags or arguments</td></tr>
+          <tr><td>3</td><td>ExitAuthError</td><td>Authentication failed (bad credentials, expired token)</td></tr>
+          <tr><td>4</td><td>ExitRateLimited</td><td>API rate limit exceeded</td></tr>
+          <tr><td>5</td><td>ExitNotFound</td><td>Resource not found</td></tr>
+          <tr><td>6</td><td>ExitPaymentError</td><td>Payment or billing error</td></tr>
+          <tr><td>7</td><td>ExitGenTimeout</td><td>Generation timed out (still processing)</td></tr>
+          <tr><td>10</td><td>ExitNetworkError</td><td>Network connectivity error</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="automation-card">
+      <h3>Environment variables</h3>
+      <p class="auto-desc">Override any configuration via environment variables. These take precedence over config files but are overridden by CLI flags.</p>
+      <table class="env-table">
+        <thead>
+          <tr><th>Variable</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>MODELSLAB_API_KEY</td><td>API key for generation endpoints (overrides keychain)</td></tr>
+          <tr><td>MODELSLAB_TOKEN</td><td>Bearer token for control-plane API (overrides keychain)</td></tr>
+          <tr><td>MODELSLAB_BASE_URL</td><td>Override API base URL (for self-hosted or staging)</td></tr>
+          <tr><td>NO_COLOR</td><td>Disable colored terminal output (set to any value)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="automation-card">
+      <h3>Global flags</h3>
+      <p class="auto-desc">These flags are available on every command and control behavior across the entire CLI.</p>
+      <div class="code-block">
+<span class="comment"># Available on all commands:</span>
+<span class="flag">--output</span>, <span class="flag">-o</span> <span class="string">"json"</span>       <span class="comment"># Output format: human (default), json</span>
+<span class="flag">--jq</span> <span class="string">"&lt;expression&gt;"</span>        <span class="comment"># Filter JSON output with jq expression</span>
+<span class="flag">--profile</span> <span class="string">"&lt;name&gt;"</span>        <span class="comment"># Auth profile to use (default: "default")</span>
+<span class="flag">--api-key</span> <span class="string">"&lt;key&gt;"</span>         <span class="comment"># Override API key for this command</span>
+<span class="flag">--base-url</span> <span class="string">"&lt;url&gt;"</span>       <span class="comment"># Override API base URL</span>
+<span class="flag">--no-color</span>               <span class="comment"># Disable colored output</span></div>
+    </div>
+  </div>
+</section>
+
 <!-- ========== FEATURES ========== -->
 <section id="features">
   <p class="section-label">Features</p>
-  <h2 class="section-title">Built for developers</h2>
+  <h2 class="section-title">Built for developers and agents</h2>
   <p class="section-desc">A comprehensive CLI designed to integrate seamlessly into your workflow.</p>
 
   <div class="features-grid">
